@@ -14,6 +14,10 @@ using namespace std;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
+vector<vector<string>> playersDeliveries;//deliveries of all players
+//index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
+//that player has to deliver to
+
 
 
 int chanceSpaces[] = {10,19,28};
@@ -21,6 +25,8 @@ int postOffices[] = { 3, 8, 12, 17, 21, 26, 30, 35 };
 int mansions[] = { 2, 9, 11, 18, 20,27,29,36 };
 int houses[] = { 4,5,6,7,22,23,24,25 };
 int apartments[] = { 13,14,15,16,31,32,33,34 };
+string residences[] = {"Harfield","Estrada", "Mackenzie", "Wolfram", "Cabera", "Lowery", "Fischer", "Thatcher", "Kelley", "Shapard", 
+"Atkins", "Rodrigues", "Howells", "Barlow"};
 
 int playerTurn = 0;//this is the players turn - 1. player1 is 0, player4 is 3
 
@@ -35,10 +41,13 @@ bool isApartment(int);
 string getHouseName(int);
 string getMansionName(int);
 string getApartmentName(int);
+bool givePlayerDelivery(int, bool);
+int RNG(int, int);
 
 
 int main()
 {
+	srand(time(NULL));//make it truely random
 	int playerCount;
 	while (true) {
 		playerCount = NULL;
@@ -70,6 +79,22 @@ int main()
 	//index 1 of the array will be the first space, index 2 will be the second space.
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
+	//make empty arrays
+	if (playerCount == 2) {
+		vector<vector<string>> deliver = { {},{} };
+		playersDeliveries = deliver;
+	}
+	else if (playerCount == 3) {
+		vector<vector<string>> deliver = { {},{},{} };
+		playersDeliveries = deliver;
+	}
+	else
+	{
+		vector<vector<string>> deliver = { {},{},{},{} };
+		playersDeliveries = deliver;
+	}
+	
+
 
 	
 	while (!allDelivered) {
@@ -97,9 +122,7 @@ int main()
 		}
 		int diceRoll = 0;
 		for (int i = 0; i < timesRolled; i++) {
-			
-			srand(time(NULL));//make it truely random
-			diceRoll += rand() % 6 + 1;//add to diceroll
+			diceRoll += RNG(1, 6);
 		}
 		
 		
@@ -111,15 +134,27 @@ int main()
 		}
 		int spaceOn = playersSpace[playerTurn];//space current player is on
 
+		//check for space player is on
 		if (isHouse(spaceOn)) {
-			cout << "H";
+			cout << "You have landed on the " + getHouseName(spaceOn) << " residence!\n";
 		}
 		if (isMansion(spaceOn)) {
-			cout << "M";
-
+			cout << "You have landed on the " + getMansionName(spaceOn) << " residence!\n";
 		}
 		if (isApartment(spaceOn)) {
-			cout << "A";
+			cout << "You have landed on the " + getApartmentName(spaceOn) << " residence!\n";
+		}
+		//check if player is on chance space
+		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
+			cout << "You have landed on a chance square! You drew a card:\n";
+			givePlayerDelivery(playerTurn, false);
+			cout << playersDeliveries[playerTurn][0];
+		}
+		//check if player is on post office
+		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
+			cout << "You have landed on a post office square!\n";
+			givePlayerDelivery(playerTurn, false);
+			cout << playersDeliveries[playerTurn][0];
 
 		}
 
@@ -160,17 +195,87 @@ bool isApartment(int i) {//check if the square is an apartment or not
 	return false;
 }
 
-string getHouseName(int)
+string getHouseName(int i)
 {
-	return string();
+	if (i == 4 || i == 5) {
+		return "Estrada";
+	}
+	else if (i == 6 || i == 7) {
+		return "Mackenzie";
+	}
+	else if (i == 22 || i == 23) {
+		return "Kelley";
+	}
+	else if (i == 24 || i == 25) {
+		return "Shepard";
+	}
 }
 
-string getMansionName(int)
+string getMansionName(int i)
 {
-	return string();
+	if (i == 2) {
+		return "Harfield";
+	}
+	else if (i == 9) {
+		return "Wolfram";
+	}
+	else if (i == 11) {
+		return "Cabera";
+	}
+	else if (i == 18) {
+		return "Fischer";
+	}
+	else if (i == 20) {
+		return "Thatcher";
+	}
+	else if (i == 27) {
+		return "Atkins";
+	}
+	else if (i == 29) {
+		return "Rodrigues";
+	}
+	else if (i == 36) {
+		return "Barlow";
+	}
+	
 }
 
-string getApartmentName(int)
+string getApartmentName(int i)
 {
-	return string();
+	if (i == 13 || i == 14 || i == 15 || i == 16) {
+		return "Lowery";
+	}
+	else if (i == 31 || i == 32 || i == 33 || i == 34) {
+		return "Howell";
+	}
+}
+
+bool givePlayerDelivery(int player, bool goOver) {
+	if (playersDeliveries[player].size() <= 5 || goOver) {//has less than 5 deliveries or they draw the card to get an extra delivery
+		int deliveryRes;
+		do
+		{
+			
+			deliveryRes = RNG(0, residences->size() - 1);//get random index of residencs
+			
+			//cout << deliveryRes;
+			
+		} while (!residences[deliveryRes].compare("TAKEN"));//a bit of inefficient code, but it gets the job done
+		string indexOfRes = residences[deliveryRes];
+			vector<string> temp = playersDeliveries[player];
+			temp[playersDeliveries[player].size()].append(indexOfRes);
+			playersDeliveries[player] = temp;
+		//playersDeliveries[player].push_back(playersDeliveries[player][playersDeliveries[player].size()].push_back(indexOfRes));
+		//playersDeliveries[player][playersDeliveries[player].size()] = residences[deliveryRes];//set player delivery to that residence
+		residences[deliveryRes] = "TAKEN";//set to "TAKEN"
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int RNG(int low, int high) {
+	return rand() % high + low;//return random number
 }
