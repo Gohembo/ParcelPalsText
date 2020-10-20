@@ -1,0 +1,3 @@
+﻿  ParcelPals.cpp
+X:\programs\programs\ParcelPals\ParcelPals.cpp(86,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  ParcelPals.vcxproj -> X:\programs\programs\ParcelPals\Debug\ParcelPals.exe

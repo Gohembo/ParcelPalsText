@@ -1,0 +1,104 @@
+// ParcelPals.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <locale>
+#include <random>
+#include <chrono>
+#include <ctime> 
+using namespace std;
+
+
+vector<int> playersMoney;//money of all players
+vector<int> playersSpace;//spaces of all players
+
+
+int chanceSpaces[] = {10,19,28};
+int postOffices[] = { 3, 8, 12, 17, 21, 26, 30, 35 };
+
+int playerTurn = 0;//this is the players turn - 1. player1 is 0, player4 is 3
+
+bool allDelivered = false;//true when all packages are delivered
+
+locale loc;
+int main()
+{
+	int playerCount;
+	while (true) {
+		playerCount = NULL;
+		cout << "How many players will be playing the game?\n";
+		cin >> playerCount;
+		if (cin.good()) {
+			if (playerCount > 0 && playerCount < 5) {
+				break;
+			}
+			else
+			{
+				cout << "There can only be 1-4 players!\n";
+				cin.clear();
+				cin.ignore(1, '\n');
+			}
+		}
+		else
+		{
+			cout << "Invalid input, try again.\n";
+			cin.clear();
+			cin.ignore(1, '\n');
+		}
+	}
+	//index 0 of the array will be player 1, index one of the array will be player 2
+	vector<int> money(playerCount - 1, 200);//set each players' money to 200
+	playersMoney = money;//cause you cant split vector declaration and initialization
+	
+	vector<int> space(playerCount - 1, 1);//set each players' space to 1 (spaces will be 1 indexed)
+	//index 1 of the array will be the first space, index 2 will be the second space.
+	playersSpace = space;//cause you cant split vector declaration and initialization
+
+	while (!allDelivered) {
+		int timesRolled = 1;//how many times to roll the dice
+
+		while (true) {
+
+			std::string response;
+			cout << "Player " << playerTurn + 1 << ", what would you like to do?\n";
+			//player can either roll, see deliveries, or use a card(if they have any)
+			cin >> response;
+			if (cin.good()) {
+
+				if (response.find("roll") != string::npos) {//if response contains the word "roll"
+					break;
+				}//more to be added (as an else)! XX
+				
+			}
+			else
+			{
+				cout << "Invalid input. Try again. Your input must contain what you want to do within the sentence!\n";
+				cin.clear();
+				cin.ignore(1, '\n');
+			}
+		}
+		int diceRoll = 0;
+		for (int i = 0; i < timesRolled; i++) {
+			
+			srand(time(NULL));//make it truely random
+			diceRoll += rand() % 6 + 1;//add to diceroll
+		}
+		
+		
+		cout << "You rolled a total of " << diceRoll << "!\n";
+		
+
+
+		if (playerTurn + 1 <= playerCount) {//get next player's turn
+			playerTurn++;
+		}
+		else
+		{
+			playerTurn = 0;
+		}
+	}
+
+}

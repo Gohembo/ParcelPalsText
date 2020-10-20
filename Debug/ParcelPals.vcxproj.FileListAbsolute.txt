@@ -1,0 +1,2 @@
+X:\programs\programs\ParcelPals\Debug\ParcelPals.exe
+X:\programs\programs\ParcelPals\Debug\ParcelPals.pdb
