@@ -1,6 +1,7 @@
 ﻿  ParcelPals.cpp
 X:\programs\programs\ParcelPals\ParcelPals.cpp(50,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-X:\programs\programs\ParcelPals\ParcelPals.cpp(199): warning C4715: 'getHouseName': not all control paths return a value
-X:\programs\programs\ParcelPals\ParcelPals.cpp(228): warning C4715: 'getMansionName': not all control paths return a value
-X:\programs\programs\ParcelPals\ParcelPals.cpp(238): warning C4715: 'getApartmentName': not all control paths return a value
+X:\programs\programs\ParcelPals\ParcelPals.cpp(262,22): warning C4018: '<': signed/unsigned mismatch
+X:\programs\programs\ParcelPals\ParcelPals.cpp(206): warning C4715: 'getHouseName': not all control paths return a value
+X:\programs\programs\ParcelPals\ParcelPals.cpp(235): warning C4715: 'getMansionName': not all control paths return a value
+X:\programs\programs\ParcelPals\ParcelPals.cpp(245): warning C4715: 'getApartmentName': not all control paths return a value
   ParcelPals.vcxproj -> X:\programs\programs\ParcelPals\Debug\ParcelPals.exe

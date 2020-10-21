@@ -14,7 +14,7 @@ using namespace std;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries;//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"","","","",""},{"","","","",""},{"","","","",""},{"","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
 
@@ -79,7 +79,14 @@ int main()
 	//index 1 of the array will be the first space, index 2 will be the second space.
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
-	
+	//idk how to make an empty vector so this is what i got lol
+	for (int i = 0; i < playerCount; i++) {
+		for (int u = 0; u < 5; u++) {
+			playersDeliveries[playerCount][u] = "";
+
+		}
+
+	}
 	
 
 
@@ -250,8 +257,16 @@ bool givePlayerDelivery(int player, bool goOver) {
 		} while (!residences[deliveryRes].compare("TAKEN"));//a bit of inefficient code, but it gets the job done
 		
 			string indexOfRes = residences[deliveryRes];
+			int index = 0;
 			
-			playersDeliveries[player][playersDeliveries[player].size()].append(residences[deliveryRes]);
+			for (int i = 0; i < playersDeliveries[player].size(); i++) {
+				
+					if (playersDeliveries[player][i] != "") {
+						index = i;
+						break;
+					}
+			}
+			playersDeliveries[player][index].append(residences[deliveryRes]);
 			//temp.insert();
 
 			//temp[].append(indexOfRes);
