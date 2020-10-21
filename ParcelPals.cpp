@@ -14,7 +14,7 @@ using namespace std;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries{ {"","","","",""},{"","","","",""},{"","","","",""},{"","","","",""}};//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
 
@@ -68,7 +68,7 @@ int main()
 		{
 			cout << "Invalid input, try again.\n";
 			cin.clear();
-			cin.ignore(1, '\n');
+			cin.ignore(99, '\n');
 		}
 	}
 	//index 0 of the array will be player 1, index one of the array will be player 2
@@ -80,9 +80,9 @@ int main()
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
 	//idk how to make an empty vector so this is what i got lol
-	for (int i = 0; i < playerCount; i++) {
+	for (int i = 0; i < playerCount-1; i++) {
 		for (int u = 0; u < 5; u++) {
-			playersDeliveries[playerCount][u] = "";
+			playersDeliveries[i][u] = "";
 
 		}
 
@@ -141,14 +141,11 @@ int main()
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
 			cout << "You have landed on a chance square! You drew a card:\n";
-			givePlayerDelivery(playerTurn, false);
-			cout << playersDeliveries[playerTurn][0];
 		}
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
 			cout << "You have landed on a post office square!\n";
 			givePlayerDelivery(playerTurn, false);
-			cout << playersDeliveries[playerTurn][0];
 
 		}
 
@@ -252,14 +249,12 @@ bool givePlayerDelivery(int player, bool goOver) {
 			
 			deliveryRes = RNG(0, residences->size() - 1);//get random index of residencs
 			
-			//cout << deliveryRes;
-			
 		} while (!residences[deliveryRes].compare("TAKEN"));//a bit of inefficient code, but it gets the job done
 		
 			string indexOfRes = residences[deliveryRes];
 			int index = 0;
 			
-			for (int i = 0; i < playersDeliveries[player].size(); i++) {
+			for (int i = 0; i < playersDeliveries[player].size(); i++) {//get first index thats not empty
 				
 					if (playersDeliveries[player][i] != "") {
 						index = i;
@@ -267,13 +262,7 @@ bool givePlayerDelivery(int player, bool goOver) {
 					}
 			}
 			playersDeliveries[player][index].append(residences[deliveryRes]);
-			//temp.insert();
-
-			//temp[].append(indexOfRes);
-			//playersDeliveries[player] = temp;
-		//playersDeliveries[player].push_back(playersDeliveries[player][playersDeliveries[player].size()].push_back(indexOfRes));
-		//playersDeliveries[player][playersDeliveries[player].size()] = residences[deliveryRes];//set player delivery to that residence
-		residences[deliveryRes] = "TAKEN";//set to "TAKEN"
+			residences[deliveryRes] = "TAKEN";//set to "TAKEN"
 		return true;
 	}
 	else
@@ -284,4 +273,13 @@ bool givePlayerDelivery(int player, bool goOver) {
 
 int RNG(int low, int high) {
 	return rand() % high + low;//return random number
+}
+
+bool hasDelivery(int player, string residence) {
+	for (int i = 0; i < 6; i++) {
+		if (playersDeliveries[player][i].find(residence) != string::npos) {
+			return true;
+		}
+	}
+	return false;
 }
