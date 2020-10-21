@@ -12,6 +12,7 @@
 using namespace std;
 
 //test push pog
+//test gitkraken working
 
 
 vector<int> playersMoney;//money of all players
