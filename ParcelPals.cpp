@@ -11,6 +11,8 @@
 #include <ctime> 
 using namespace std;
 
+//test push pog
+
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
