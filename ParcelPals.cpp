@@ -13,6 +13,7 @@ using namespace std;
 
 //test push pog
 //test gitkraken working
+int bruh = 0;
 
 
 vector<int> playersMoney;//money of all players
