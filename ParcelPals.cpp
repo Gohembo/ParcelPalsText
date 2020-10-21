@@ -79,20 +79,7 @@ int main()
 	//index 1 of the array will be the first space, index 2 will be the second space.
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
-	//make empty arrays
-	if (playerCount == 2) {
-		vector<vector<string>> deliver = { {},{} };
-		playersDeliveries = deliver;
-	}
-	else if (playerCount == 3) {
-		vector<vector<string>> deliver = { {},{},{} };
-		playersDeliveries = deliver;
-	}
-	else
-	{
-		vector<vector<string>> deliver = { {},{},{},{} };
-		playersDeliveries = deliver;
-	}
+	
 	
 
 
@@ -261,10 +248,13 @@ bool givePlayerDelivery(int player, bool goOver) {
 			//cout << deliveryRes;
 			
 		} while (!residences[deliveryRes].compare("TAKEN"));//a bit of inefficient code, but it gets the job done
-		string indexOfRes = residences[deliveryRes];
+		
+			string indexOfRes = residences[deliveryRes];
 			vector<string> temp = playersDeliveries[player];
-			temp[playersDeliveries[player].size()].append(indexOfRes);
-			playersDeliveries[player] = temp;
+			//temp.insert();
+
+			//temp[].append(indexOfRes);
+			//playersDeliveries[player] = temp;
 		//playersDeliveries[player].push_back(playersDeliveries[player][playersDeliveries[player].size()].push_back(indexOfRes));
 		//playersDeliveries[player][playersDeliveries[player].size()] = residences[deliveryRes];//set player delivery to that residence
 		residences[deliveryRes] = "TAKEN";//set to "TAKEN"
