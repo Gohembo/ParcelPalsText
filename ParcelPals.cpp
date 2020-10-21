@@ -13,7 +13,7 @@ using namespace std;
 
 //test push pog
 //test gitkraken working
-
+//branch testt
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
@@ -49,6 +49,7 @@ int RNG(int, int);
 bool hasDelivery(int, string);
 void addMoney(int, int);
 void removePlayerDelivery(int , string );
+string getEventName(int);
 int main()
 {
 	srand(time(NULL));//make it truely random
@@ -102,7 +103,9 @@ int main()
 				if (response.find("roll") != string::npos) {//if response contains the word "roll"
 					break;
 				}//more to be added (as an else)! XX
-				
+				if (response.find("card") != string::npos) {//if response contains the word "roll"
+					break; //call functions here
+				}
 			}
 			else
 			{
@@ -150,7 +153,7 @@ int main()
 				removePlayerDelivery(playerTurn, getApartmentName(spaceOn));
 			}
 		}
-		int randomnum = 6; //changed
+		int randomnum = 6; //changed, need to make random
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
 			cout << "You have landed on a chance square! You drew a card: " << getEventName(randomnum) << "\n"; //changed
@@ -250,34 +253,34 @@ string getEventName(int i) {
 	if (i = 1) {
 		return "Prime Time";
 	}
-	else if (i = 2) {
+	else if (i == 2) {
 		return "Speed Bump";
 	}
-	else if (i = 3) {
+	else if (i == 3) {
 		return "Porch Bandit";
 	}
-	else if (i = 4) {
+	else if (i == 4) {
 		return "Cargo Plane";
 	}
-	else if (i = 5) {
+	else if (i == 5) {
 		return "Speeding";
 	}
-	else if (i = 6) {
+	else if (i == 6) {
 		return "Speeding Ticket";
 	}
-	else if (i = 7) {
+	else if (i == 7) {
 		return "Teleportation";
 	}
-	else if (i = 8) {
+	else if (i == 8) {
 		return "Pay Raise";
 	}
-	else if (i = 9) {
+	else if (i == 9) {
 		return "Car Crash";
 	}
-	else if (i = 10) {
+	else if (i == 10) {
 		return "Traffic";
 	}
-	else if (i = 11) {
+	else if (i == 11) {
 		return "Bigger Satchel";
 	}
 	else if (i = 12) {
