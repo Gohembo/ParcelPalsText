@@ -14,7 +14,7 @@ using namespace std;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries{ {"","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"Harfield","Estrada","Mackenzie","","",""},{"Harfield","Estrada","Mackenzie","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
 
@@ -43,8 +43,9 @@ string getMansionName(int);
 string getApartmentName(int);
 bool givePlayerDelivery(int, bool);
 int RNG(int, int);
-
-
+bool hasDelivery(int, string);
+void addMoney(int, int);
+void removePlayerDelivery(int , string );
 int main()
 {
 	srand(time(NULL));//make it truely random
@@ -79,14 +80,7 @@ int main()
 	//index 1 of the array will be the first space, index 2 will be the second space.
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
-	//idk how to make an empty vector so this is what i got lol
-	for (int i = 0; i < playerCount-1; i++) {
-		for (int u = 0; u < 5; u++) {
-			playersDeliveries[i][u] = "";
-
-		}
-
-	}
+	
 	
 
 
@@ -131,12 +125,27 @@ int main()
 		//check for space player is on
 		if (isHouse(spaceOn)) {
 			cout << "You have landed on the " + getHouseName(spaceOn) << " residence!\n";
+			if (hasDelivery(playerTurn, getHouseName(spaceOn))) {//if has a package for residence
+				addMoney(playerTurn,500);
+				cout << "You delivered your package to the " + getHouseName(spaceOn) << " residence and earned $500! \n";
+				removePlayerDelivery(playerTurn, getHouseName(spaceOn));
+			}
 		}
 		if (isMansion(spaceOn)) {
 			cout << "You have landed on the " + getMansionName(spaceOn) << " residence!\n";
+			if (hasDelivery(playerTurn, getMansionName(spaceOn))) {
+				addMoney(playerTurn, 1000);
+				cout << "You delivered your package to the " + getMansionName(spaceOn) << " residence and earned $1000! \n";
+				removePlayerDelivery(playerTurn, getMansionName(spaceOn));
+			}
 		}
 		if (isApartment(spaceOn)) {
 			cout << "You have landed on the " + getApartmentName(spaceOn) << " residence!\n";
+			if (hasDelivery(playerTurn, getApartmentName(spaceOn))) {
+				addMoney(playerTurn, 250);
+				cout << "You delivered your package to the " + getApartmentName(spaceOn) << " residence and earned $250! \n";
+				removePlayerDelivery(playerTurn, getApartmentName(spaceOn));
+			}
 		}
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
@@ -149,7 +158,7 @@ int main()
 
 		}
 
-
+		cout << endl;
 		if (playerTurn + 1 <= playerCount-1) {//get next player's turn
 			playerTurn++;
 		}
@@ -283,3 +292,20 @@ bool hasDelivery(int player, string residence) {
 	}
 	return false;
 }
+
+void addMoney(int player, int amount) {
+	playersMoney[player] += amount;
+}
+
+void removePlayerDelivery(int player, string residence) {
+	int index = 0;
+	string out;
+	for (string s : playersDeliveries[player]) {//go through all active deliveries a player has
+		if (s.compare(residence) == 0) {//see if they are the same
+			break;//break to remove it from vector
+		}
+		index++;//add to index if first failed
+	}
+	playersDeliveries[player][index] = "";
+}
+
