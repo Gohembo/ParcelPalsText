@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ﻿  ParcelPals.cpp
 X:\programs\programs\ParcelPals\ParcelPals.cpp(51,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 X:\programs\programs\ParcelPals\ParcelPals.cpp(266,22): warning C4018: '<': signed/unsigned mismatch
@@ -8,4 +9,10 @@ X:\programs\programs\ParcelPals\ParcelPals.cpp(241): warning C4715: 'getMansionN
   ParcelPals.vcxproj -> X:\programs\programs\ParcelPals\Debug\ParcelPals.exe
 =======
 ﻿  ParcelPals.vcxproj -> C:\Users\mateo\Pictures\School\School Repos\ParcelPalsText\Debug\ParcelPals.exe
+>>>>>>> Stashed changes
+=======
+﻿  ParcelPals.cpp
+C:\Users\EpikG\Music\PARCEL\parcel\ParcelPals.cpp(50,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\EpikG\Music\PARCEL\parcel\ParcelPals.cpp(144,71): error C3861: 'getEventName': identifier not found
+C:\Users\EpikG\Music\PARCEL\parcel\ParcelPals.cpp(302,22): warning C4018: '<': signed/unsigned mismatch
 >>>>>>> Stashed changes

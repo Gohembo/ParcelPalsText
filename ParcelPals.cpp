@@ -149,9 +149,10 @@ int main()
 				removePlayerDelivery(playerTurn, getApartmentName(spaceOn));
 			}
 		}
+		int randomnum = 6; //changed
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
-			cout << "You have landed on a chance square! You drew a card:\n";
+			cout << "You have landed on a chance square! You drew a card: " << getEventName(randomnum) << "\n"; //changed
 		}
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
@@ -197,6 +198,8 @@ bool isApartment(int i) {//check if the square is an apartment or not
 	return false;
 }
 
+
+
 string getHouseName(int i)
 {
 	if (i == 4 || i == 5) {
@@ -213,7 +216,7 @@ string getHouseName(int i)
 	}
 }
 
-string getMansionName(int i)
+string getMansionName(int i) //Look at 132 to 140
 {
 	if (i == 2) {
 		return "Harfield";
@@ -240,6 +243,48 @@ string getMansionName(int i)
 		return "Barlow";
 	}
 	
+}
+
+string getEventName(int i) {
+	if (i = 1) {
+		return "Prime Time";
+	}
+	else if (i = 2) {
+		return "Speed Bump";
+	}
+	else if (i = 3) {
+		return "Porch Bandit";
+	}
+	else if (i = 4) {
+		return "Cargo Plane";
+	}
+	else if (i = 5) {
+		return "Speeding";
+	}
+	else if (i = 6) {
+		return "Speeding Ticket";
+	}
+	else if (i = 7) {
+		return "Teleportation";
+	}
+	else if (i = 8) {
+		return "Pay Raise";
+	}
+	else if (i = 9) {
+		return "Car Crash";
+	}
+	else if (i = 10) {
+		return "Traffic";
+	}
+	else if (i = 11) {
+		return "Bigger Satchel";
+	}
+	else if (i = 12) {
+		return "Premium Gas";
+	}
+	else if (i = 13) {
+		return "Flat Tire";
+	}
 }
 
 string getApartmentName(int i)
