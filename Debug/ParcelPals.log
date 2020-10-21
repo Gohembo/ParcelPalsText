@@ -1,18 +1,8 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ﻿  ParcelPals.cpp
-X:\programs\programs\ParcelPals\ParcelPals.cpp(51,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-X:\programs\programs\ParcelPals\ParcelPals.cpp(266,22): warning C4018: '<': signed/unsigned mismatch
-X:\programs\programs\ParcelPals\ParcelPals.cpp(212): warning C4715: 'getHouseName': not all control paths return a value
-X:\programs\programs\ParcelPals\ParcelPals.cpp(251): warning C4715: 'getApartmentName': not all control paths return a value
-X:\programs\programs\ParcelPals\ParcelPals.cpp(241): warning C4715: 'getMansionName': not all control paths return a value
-  ParcelPals.vcxproj -> X:\programs\programs\ParcelPals\Debug\ParcelPals.exe
-=======
-﻿  ParcelPals.vcxproj -> C:\Users\mateo\Pictures\School\School Repos\ParcelPalsText\Debug\ParcelPals.exe
->>>>>>> Stashed changes
-=======
-﻿  ParcelPals.cpp
-C:\Users\EpikG\Music\PARCEL\parcel\ParcelPals.cpp(50,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\EpikG\Music\PARCEL\parcel\ParcelPals.cpp(144,71): error C3861: 'getEventName': identifier not found
-C:\Users\EpikG\Music\PARCEL\parcel\ParcelPals.cpp(302,22): warning C4018: '<': signed/unsigned mismatch
->>>>>>> Stashed changes
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(59,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(323,22): warning C4018: '<': signed/unsigned mismatch
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(227): warning C4715: 'getHouseName': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(256): warning C4715: 'getMansionName': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(298): warning C4715: 'getEventName': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(308): warning C4715: 'getApartmentName': not all control paths return a value
+  ParcelPals.vcxproj -> X:\programs\programs\ParcelPalsText\Debug\ParcelPals.exe

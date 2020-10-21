@@ -2,3 +2,5 @@ X:\programs\programs\ParcelPals\Debug\ParcelPals.exe
 X:\programs\programs\ParcelPals\Debug\ParcelPals.pdb
 C:\Users\mateo\Pictures\School\School Repos\ParcelPalsText\Debug\ParcelPals.exe
 C:\Users\mateo\Pictures\School\School Repos\ParcelPalsText\Debug\ParcelPals.pdb
+X:\programs\programs\ParcelPalsText\Debug\ParcelPals.exe
+X:\programs\programs\ParcelPalsText\Debug\ParcelPals.pdb

@@ -18,10 +18,10 @@ int bruh = 0;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries{ {"Harfield","Estrada","Mackenzie","","",""},{"Harfield","Estrada","Mackenzie","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
-
+vector<vector<string>> playersEvents{ {"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
 
 
 int chanceSpaces[] = {10,19,28};
@@ -50,6 +50,10 @@ int RNG(int, int);
 bool hasDelivery(int, string);
 void addMoney(int, int);
 void removePlayerDelivery(int , string );
+string getEventName(int i);
+void giveChance(int, string);
+void removeChance(int, string);
+
 int main()
 {
 	srand(time(NULL));//make it truely random
@@ -151,10 +155,11 @@ int main()
 				removePlayerDelivery(playerTurn, getApartmentName(spaceOn));
 			}
 		}
-		int randomnum = 6; //changed
+		int randomnum = 6; //changed - will use RNG function
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
 			cout << "You have landed on a chance square! You drew a card: " << getEventName(randomnum) << "\n"; //changed
+			giveChance(playerTurn, getEventName(randomnum));
 		}
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
@@ -162,6 +167,9 @@ int main()
 			givePlayerDelivery(playerTurn, false);
 
 		}
+
+
+		//TODO: add a check to see what chance cards have to be acted upon the player (the non optional ones like losing a package)
 
 		cout << endl;
 		if (playerTurn + 1 <= playerCount-1) {//get next player's turn
@@ -248,43 +256,43 @@ string getMansionName(int i) //Look at 132 to 140
 }
 
 string getEventName(int i) {
-	if (i = 1) {
+	if (i == 1) {
 		return "Prime Time";
 	}
-	else if (i = 2) {
+	else if (i == 2) {
 		return "Speed Bump";
 	}
-	else if (i = 3) {
+	else if (i == 3) {
 		return "Porch Bandit";
 	}
-	else if (i = 4) {
+	else if (i == 4) {
 		return "Cargo Plane";
 	}
-	else if (i = 5) {
+	else if (i == 5) {
 		return "Speeding";
 	}
-	else if (i = 6) {
+	else if (i == 6) {
 		return "Speeding Ticket";
 	}
-	else if (i = 7) {
+	else if (i == 7) {
 		return "Teleportation";
 	}
-	else if (i = 8) {
+	else if (i == 8) {
 		return "Pay Raise";
 	}
-	else if (i = 9) {
+	else if (i == 9) {
 		return "Car Crash";
 	}
-	else if (i = 10) {
+	else if (i == 10) {
 		return "Traffic";
 	}
-	else if (i = 11) {
+	else if (i == 11) {
 		return "Bigger Satchel";
 	}
-	else if (i = 12) {
+	else if (i == 12) {
 		return "Premium Gas";
 	}
-	else if (i = 13) {
+	else if (i == 13) {
 		return "Flat Tire";
 	}
 }
@@ -356,5 +364,41 @@ void removePlayerDelivery(int player, string residence) {
 		index++;//add to index if first failed
 	}
 	playersDeliveries[player][index] = "";
+}
+
+void giveChance(int player, string card) {
+
+	if (playersEvents[player].size() <= 10) {
+		int index = 0;
+		for (string s : playersEvents[player]) {
+			if (s.compare("") == 0) {
+				playersEvents[player][index] = card;
+				break;
+			}
+			index++;
+		}
+
+	}
+	else
+	{
+		cout << "You have too many cards! You have been awarded with $200 as compensation.\n";
+		addMoney(player, 200);
+	}
+}
+
+void removeChance(int player, string card) {
+
+	if (playersEvents[player].size() > 0) {
+		int index = 0;
+		for (string s : playersEvents[player]) {
+
+			if (s.compare(card) == 0) {
+				playersEvents[player][index] = "";
+				break;
+			}
+			index++;
+		}
+	}
+
 }
 
