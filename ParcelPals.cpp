@@ -250,7 +250,8 @@ bool givePlayerDelivery(int player, bool goOver) {
 		} while (!residences[deliveryRes].compare("TAKEN"));//a bit of inefficient code, but it gets the job done
 		
 			string indexOfRes = residences[deliveryRes];
-			vector<string> temp = playersDeliveries[player];
+			
+			playersDeliveries[player][playersDeliveries[player].size()].append(residences[deliveryRes]);
 			//temp.insert();
 
 			//temp[].append(indexOfRes);
