@@ -15,11 +15,13 @@ using namespace std;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries{ {"","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"Wolfram","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
-vector<vector<string>> playersEvents{ {"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
-
+vector<vector<string>> playersEvents{ {"Prime Time","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
+vector<bool> porchBandit;
+vector<bool> skipNextTurn;
+vector<int> extraRolls;
 
 int chanceSpaces[] = {10,19,28};
 int postOffices[] = { 3, 8, 12, 17, 21, 26, 30, 35 };
@@ -50,6 +52,9 @@ void removePlayerDelivery(int , string );
 string getEventName(int i);
 void giveChance(int, string);
 void removeChance(int, string);
+int indexofString(vector<string>, string);
+int indexofInt(vector<int>, int);
+bool isEmpty(vector<string> );
 
 int main()
 {
@@ -125,8 +130,50 @@ int main()
 		if (playersSpace[playerTurn] > 36) {
 			playersSpace[playerTurn] = playersSpace[playerTurn] - 36;//set you to the start of the board. start space is 1
 		}
-		int spaceOn = playersSpace[playerTurn];//space current player is on
+		
 
+		//check for event before delivery cause some cards teleport you to houses, so you have to check the delivery on their new space
+		//non storable events happen now
+		if (indexofString(playersEvents[playerTurn], "Prime Time") != -1) {
+			if (!isEmpty(playersDeliveries[playerTurn])) {
+				int randomDelivery = 0;
+				do
+				{
+					randomDelivery = RNG(0, playersDeliveries[playerTurn].size() - 1);
+					
+				} while (playersDeliveries[playerTurn][randomDelivery].compare("") == 0);//in case we get a "" as our empty value. we cant just use 0 cause the 0th delivery might already be delivered.
+				 
+				string residence = playersDeliveries[playerTurn][randomDelivery];
+				int newSpace = 0;
+				for (int i = 2; i < 32; i++) {
+					if (getApartmentName(i).compare(residence) == 0) {
+						newSpace = i;
+						break;
+					}
+					if (getHouseName(i).compare(residence) == 0) {
+						newSpace = i;
+						break;
+					}
+					if (getMansionName(i).compare(residence) == 0) {
+						newSpace = i;
+						break;
+					}
+				}
+
+				playersSpace[playerTurn] = newSpace;
+
+				removeChance(playerTurn, "Prime Time");
+			}
+			else
+			{
+				cout << "You don't have any deliveries!" << endl;
+			}
+		}
+
+
+
+
+		int spaceOn = playersSpace[playerTurn];//space current player is on
 		//check for space player is on
 		if (isHouse(spaceOn)) {
 			cout << "You have landed on the " + getHouseName(spaceOn) << " residence!\n";
@@ -164,6 +211,8 @@ int main()
 			givePlayerDelivery(playerTurn, false);
 
 		}
+
+		
 
 
 		//TODO: add a check to see what chance cards have to be acted upon the player (the non optional ones like losing a package)
@@ -221,6 +270,10 @@ string getHouseName(int i)
 	else if (i == 24 || i == 25) {
 		return "Shepard";
 	}
+	else
+	{
+		return "NOTVALID";
+	}
 }
 
 string getMansionName(int i) //Look at 132 to 140
@@ -248,6 +301,10 @@ string getMansionName(int i) //Look at 132 to 140
 	}
 	else if (i == 36) {
 		return "Barlow";
+	}
+	else
+	{
+		return "NOTVALID";
 	}
 	
 }
@@ -301,6 +358,10 @@ string getApartmentName(int i)
 	}
 	else if (i == 31 || i == 32 || i == 33 || i == 34) {
 		return "Howell";
+	}
+	else
+	{
+		return "NOTVALID";
 	}
 }
 
@@ -399,3 +460,36 @@ void removeChance(int player, string card) {
 
 }
 
+int indexofString(vector<string> vec, string looking) {
+	int index = 0;
+	for (string s : vec) {
+		if (s.compare(looking) == 0) {
+			return index;//break and return index
+		}
+		index++;
+	}
+	return -1;//cant find looking
+}
+
+
+int indexofInt(vector<int> vec, int looking) {
+	int index = 0;
+	for (int s : vec) {
+		if (s == looking) {
+			return index;//breaks out of loop and returns index
+		}
+		index++;
+	}
+	return -1;//if cannot find index of string
+}
+
+bool isEmpty(vector<string> vec) {
+	for (string s : vec) {
+		if (s.compare("") != 0) {
+			if (s.compare("TAKEN") != 0) {
+				return false;
+			}
+		}
+	}
+		return true;
+}
