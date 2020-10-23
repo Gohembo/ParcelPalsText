@@ -20,7 +20,6 @@ vector<vector<string>> playersDeliveries{ {"Wolfram","","","","",""},{"","","","
 //that player has to deliver to
 vector<vector<string>> playersEvents{ {"Prime Time","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
 vector<bool> porchBandit;
-vector<bool> skipNextTurn;
 vector<int> extraRolls;
 
 int chanceSpaces[] = {10,19,28};
@@ -55,6 +54,9 @@ void removeChance(int, string);
 int indexofString(vector<string>, string);
 int indexofInt(vector<int>, int);
 bool isEmpty(vector<string> );
+void primeTime(int);
+void changeSpace(int, int);
+void addSpaceToPlayer(int, int);
 
 int main()
 {
@@ -90,7 +92,8 @@ int main()
 	//index 1 of the array will be the first space, index 2 will be the second space.
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
-	
+	vector<bool> loseTurn(playerCount, false);
+	skipNextTurn = loseTurn;
 	
 
 
@@ -118,51 +121,29 @@ int main()
 				cin.ignore(1, '\n');
 			}
 		}
-		int diceRoll = 0;
-		for (int i = 0; i < timesRolled; i++) {
-			diceRoll += RNG(1, 6);
-		}
 		
-		
-		cout << "You rolled a total of " << diceRoll << "!\n";
-		
-		playersSpace[playerTurn] += diceRoll;
-		if (playersSpace[playerTurn] > 36) {
-			playersSpace[playerTurn] = playersSpace[playerTurn] - 36;//set you to the start of the board. start space is 1
-		}
 		
 
 		//check for event before delivery cause some cards teleport you to houses, so you have to check the delivery on their new space
+		
 		//non storable events happen now
+		if (indexofString(playersEvents[playerTurn], "Traffic") != -1) {
+			cout << "You lost your turn cause you got stuck in traffic!" << endl;
+			removeChance(playerTurn, "Traffic");
+		}
+		else//if they dont have the traffic card in their hand
+		{
+			int diceRoll = 0;//ROLL DICE HERE
+			for (int i = 0; i < timesRolled; i++) {
+				diceRoll += RNG(1, 6);
+			}
+			cout << "You rolled a total of " << diceRoll << "!\n";
+			addSpaceToPlayer(playerTurn, diceRoll);
+		}
+
 		if (indexofString(playersEvents[playerTurn], "Prime Time") != -1) {
 			if (!isEmpty(playersDeliveries[playerTurn])) {
-				int randomDelivery = 0;
-				do
-				{
-					randomDelivery = RNG(0, playersDeliveries[playerTurn].size() - 1);
-					
-				} while (playersDeliveries[playerTurn][randomDelivery].compare("") == 0);//in case we get a "" as our empty value. we cant just use 0 cause the 0th delivery might already be delivered.
-				 
-				string residence = playersDeliveries[playerTurn][randomDelivery];
-				int newSpace = 0;
-				for (int i = 2; i < 32; i++) {
-					if (getApartmentName(i).compare(residence) == 0) {
-						newSpace = i;
-						break;
-					}
-					if (getHouseName(i).compare(residence) == 0) {
-						newSpace = i;
-						break;
-					}
-					if (getMansionName(i).compare(residence) == 0) {
-						newSpace = i;
-						break;
-					}
-				}
-
-				playersSpace[playerTurn] = newSpace;
-
-				removeChance(playerTurn, "Prime Time");
+				primeTime(playerTurn);
 			}
 			else
 			{
@@ -170,6 +151,7 @@ int main()
 			}
 		}
 
+		
 
 
 
@@ -493,3 +475,48 @@ bool isEmpty(vector<string> vec) {
 	}
 		return true;
 }
+
+void primeTime(int player) {
+	int randomDelivery = 0;
+	do
+	{
+		randomDelivery = RNG(0, playersDeliveries[player].size() - 1);
+
+	} while (playersDeliveries[player][randomDelivery].compare("") == 0);//in case we get a "" as our empty value. we cant just use 0 cause the 0th delivery might already be delivered.
+
+	string residence = playersDeliveries[player][randomDelivery];
+	int newSpace = 0;
+	for (int i = 2; i < 32; i++) {
+		if (getApartmentName(i).compare(residence) == 0) {
+			newSpace = i;
+			break;
+		}
+		if (getHouseName(i).compare(residence) == 0) {
+			newSpace = i;
+			break;
+		}
+		if (getMansionName(i).compare(residence) == 0) {
+			newSpace = i;
+			break;
+		}
+	}
+
+	playersSpace[player] = newSpace;
+
+	removeChance(player, "Prime Time");
+}
+
+void changeSpace(int player, int space) {
+	playersSpace[player] = space;
+}
+
+
+void addSpaceToPlayer(int player, int space) {	
+	playersSpace[player] += space;
+	if (playersSpace[player] > 36) {
+		playersSpace[player] = playersSpace[player] - 36;//set you to the start of the board. start space is 1
+		
+	}
+}
+	
+

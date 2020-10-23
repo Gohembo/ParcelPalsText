@@ -1,5 +1,5 @@
 ﻿  ParcelPals.cpp
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(61,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(381,22): warning C4018: '<': signed/unsigned mismatch
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(352): warning C4715: 'getEventName': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(64,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(364,22): warning C4018: '<': signed/unsigned mismatch
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(335): warning C4715: 'getEventName': not all control paths return a value
   ParcelPals.vcxproj -> X:\programs\programs\ParcelPalsText\Debug\ParcelPals.exe
