@@ -15,11 +15,12 @@ using namespace std;
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries{ {"Wolfram","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"Wolfram","Estrada","Harfield","Mackenzie","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
-vector<vector<string>> playersEvents{ {"Prime Time","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
+vector<vector<string>> playersEvents{ {"Car Crash","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
 vector<bool> porchBandit;
+vector<bool> extraPackage;
 vector<int> extraRolls;
 
 int chanceSpaces[] = {10,19,28};
@@ -47,7 +48,7 @@ bool givePlayerDelivery(int, bool);
 int RNG(int, int);
 bool hasDelivery(int, string);
 void addMoney(int, int);
-void removePlayerDelivery(int , string );
+void removePlayerDelivery(int , string, bool);
 string getEventName(int i);
 void giveChance(int, string);
 void removeChance(int, string);
@@ -57,6 +58,8 @@ bool isEmpty(vector<string> );
 void primeTime(int);
 void changeSpace(int, int);
 void addSpaceToPlayer(int, int);
+string eventDescription(int);
+string getFirstDelivery(int player);
 
 int main()
 {
@@ -92,14 +95,20 @@ int main()
 	//index 1 of the array will be the first space, index 2 will be the second space.
 	playersSpace = space;//cause you cant split vector declaration and initialization
 
-	vector<bool> loseTurn(playerCount, false);
-	skipNextTurn = loseTurn;
+	vector<bool> losePackage(playerCount, false);
+	porchBandit = losePackage;
+
+	vector<bool> extra(playerCount, false);
+	extraPackage = extra;
+
+	vector<int> rolls(playerCount, 0);
+	extraRolls = rolls;
 	
 
 
 	
 	while (!allDelivered) {
-		int timesRolled = 1;//how many times to roll the dice
+		int timesRolled = extraRolls[playerTurn] + 1;//how many times to roll the dice (plus the one initial roll)
 
 		while (true) {
 
@@ -137,6 +146,9 @@ int main()
 			for (int i = 0; i < timesRolled; i++) {
 				diceRoll += RNG(1, 6);
 			}
+			if (timesRolled > 1) {
+				extraRolls[playerTurn] = 0;//no extra rolls
+			}
 			cout << "You rolled a total of " << diceRoll << "!\n";
 			addSpaceToPlayer(playerTurn, diceRoll);
 		}
@@ -150,6 +162,9 @@ int main()
 				cout << "You don't have any deliveries!" << endl;
 			}
 		}
+		if (indexofString(playersEvents[playerTurn], "Porch Bandit") != -1) {
+			porchBandit[playerTurn] = true;
+		}
 
 		
 
@@ -160,45 +175,99 @@ int main()
 		if (isHouse(spaceOn)) {
 			cout << "You have landed on the " + getHouseName(spaceOn) << " residence!\n";
 			if (hasDelivery(playerTurn, getHouseName(spaceOn))) {//if has a package for residence
-				addMoney(playerTurn,500);
-				cout << "You delivered your package to the " + getHouseName(spaceOn) << " residence and earned $500! \n";
-				removePlayerDelivery(playerTurn, getHouseName(spaceOn));
+				if (!porchBandit[playerTurn]) {
+					addMoney(playerTurn, 500);
+					cout << "You delivered your package to the " + getHouseName(spaceOn) << " residence and earned $500! \n";
+					removePlayerDelivery(playerTurn, getHouseName(spaceOn),false);
+				}
+				else
+				{
+					cout << "A porch bandit stole your package!" << endl;
+					removeChance(playerTurn, "Porch Bandit");
+				}
+				
 			}
 		}
 		if (isMansion(spaceOn)) {
 			cout << "You have landed on the " + getMansionName(spaceOn) << " residence!\n";
 			if (hasDelivery(playerTurn, getMansionName(spaceOn))) {
-				addMoney(playerTurn, 1000);
-				cout << "You delivered your package to the " + getMansionName(spaceOn) << " residence and earned $1000! \n";
-				removePlayerDelivery(playerTurn, getMansionName(spaceOn));
+				if (!porchBandit[playerTurn]) {
+					addMoney(playerTurn, 1000);
+					cout << "You delivered your package to the " + getMansionName(spaceOn) << " residence and earned $1000! \n";
+					removePlayerDelivery(playerTurn, getMansionName(spaceOn),false);
+				}
+				else
+				{
+					cout << "A porch bandit stole your package!" << endl;
+					removeChance(playerTurn, "Porch Bandit");
+				}
+				
 			}
 		}
 		if (isApartment(spaceOn)) {
 			cout << "You have landed on the " + getApartmentName(spaceOn) << " residence!\n";
 			if (hasDelivery(playerTurn, getApartmentName(spaceOn))) {
-				addMoney(playerTurn, 250);
-				cout << "You delivered your package to the " + getApartmentName(spaceOn) << " residence and earned $250! \n";
-				removePlayerDelivery(playerTurn, getApartmentName(spaceOn));
+				if (!porchBandit[playerTurn]) {
+					addMoney(playerTurn, 250);
+					cout << "You delivered your package to the " + getApartmentName(spaceOn) << " residence and earned $250! \n";
+					removePlayerDelivery(playerTurn, getApartmentName(spaceOn),false);
+				}
+				else
+				{
+					cout << "A porch bandit stole your package!" << endl;
+					removeChance(playerTurn, "Porch Bandit");
+				}
+				
 			}
 		}
-		int randomnum = 6; //changed - will use RNG function
+		int randomnum = RNG(1,13); //random event
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
 			cout << "You have landed on a chance square! You drew a card: " << getEventName(randomnum) << "\n"; //changed
 			giveChance(playerTurn, getEventName(randomnum));
+			cout << eventDescription(randomnum);
 		}
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
 			cout << "You have landed on a post office square!\n";
 			givePlayerDelivery(playerTurn, false);
-
+			
 		}
 
 		
 
 
-		//TODO: add a check to see what chance cards have to be acted upon the player (the non optional ones like losing a package)
+		//TODO: add a check to see what chance cards have to be acted upon the player right now (the non optional ones like losing a package)
+		if (indexofString(playersEvents[playerTurn], "Cargo Plane") > -1) {
+			extraRolls[playerTurn] = 2;
+		}
+		if (indexofString(playersEvents[playerTurn], "Premium Gas") > -1) {
+			extraRolls[playerTurn] = 1;
+		}
+		if (indexofString(playersEvents[playerTurn], "Speeding") > -1) {
+			extraRolls[playerTurn] = 1;
+		}
+		if (indexofString(playersEvents[playerTurn], "Speeding Ticket") > -1) {
+			addSpaceToPlayer(playerTurn, -5);
+		}
+		if (indexofString(playersEvents[playerTurn], "Car Crash") > -1) {
+			cout << playerTurn << endl;;
+			string res = getFirstDelivery(playerTurn);
+			if (res.compare("") != 0) {
+				removePlayerDelivery(playerTurn, res,true);
+				cout << "Your delivery to " << res << " was lost due to a car crash!" << endl;
+				removeChance(playerTurn, "Car Crash");
 
+				}//has delivery
+			else
+			{
+				cout << "You got off lucky, you had no deliveries to lose." << endl;
+
+			}
+			
+		}
+
+		//next turn
 		cout << endl;
 		if (playerTurn + 1 <= playerCount-1) {//get next player's turn
 			playerTurn++;
@@ -333,6 +402,48 @@ string getEventName(int i) {
 	}
 }
 
+string eventDescription(int i) {
+	if (i == 1) {
+		return "You get a free ride to your delivery space!";
+	}
+	else if (i == 2) {
+		return "You dropped a package!";
+	}
+	else if (i == 3) {
+		return "Your next delivery won't count!";
+	}
+	else if (i == 4) {
+		return "You will get 2 extra rolls on your next turn!";
+	}
+	else if (i == 5) {
+		return "You will roll 1 extra dice on your next turn!";
+	}
+	else if (i == 6) {
+		return "You will be moved 5 spaces back.";
+	}
+	else if (i == 7) {
+		return "You will get teleported to a the nearest post office ahead of you.";
+	}
+	else if (i == 8) {
+		return "You will recive an extra $200.";
+	}
+	else if (i == 9) {
+		return "You have lost a package due to the car crash!";
+	}
+	else if (i == 10) {
+		return "You will lose your next turn.";
+	}
+	else if (i == 11) {
+		return "You will be able to hold one extra package.";
+	}
+	else if (i == 12) {
+		return "You will get an extra roll next round!";
+	}
+	else if (i == 13) {
+		return "You will lose $200.";
+	}
+}
+
 string getApartmentName(int i)
 {
 	if (i == 13 || i == 14 || i == 15 || i == 16) {
@@ -394,7 +505,7 @@ void addMoney(int player, int amount) {
 	playersMoney[player] += amount;
 }
 
-void removePlayerDelivery(int player, string residence) {
+void removePlayerDelivery(int player, string residence, bool addToPile) {
 	int index = 0;
 	string out;
 	for (string s : playersDeliveries[player]) {//go through all active deliveries a player has
@@ -404,6 +515,17 @@ void removePlayerDelivery(int player, string residence) {
 		index++;//add to index if first failed
 	}
 	playersDeliveries[player][index] = "";
+	if (addToPile) {
+		int index = 0;
+		for (string s : residences) {
+			if (s.compare("TAKEN") == 0) {
+				break;
+			}
+			index++;
+		}
+		residences[index] = residence;
+		
+	}
 }
 
 void giveChance(int player, string card) {
@@ -512,11 +634,39 @@ void changeSpace(int player, int space) {
 
 
 void addSpaceToPlayer(int player, int space) {	
-	playersSpace[player] += space;
-	if (playersSpace[player] > 36) {
-		playersSpace[player] = playersSpace[player] - 36;//set you to the start of the board. start space is 1
-		
+	if (space >= 0) {
+		playersSpace[player] += space;
+		if (playersSpace[player] > 36) {
+			playersSpace[player] = playersSpace[player] - 36;//set you to the start of the board. start space is 1
+
+		}
 	}
-}
+	else
+	{
+		playersSpace[player] += space;
+		if (playersSpace[player] < 0) {
+			playersSpace[player] = playersSpace[player] + 36;//put you at the back of the board
+
+		}
+	}
 	
+}
+string getFirstDelivery(int player) {
+	string removalDelivery = "";
+	for (int i = 1; i <= 36; i++) {
+		if (hasDelivery(player, getApartmentName(i))) {
+			return getApartmentName(i);
+		}
+		else if (hasDelivery(player, getMansionName(i))) {
+			removalDelivery = getMansionName(i);
+			return getMansionName(i);
+		}
+		else if (hasDelivery(player, getHouseName(i))) {
+			removalDelivery = getHouseName(i);
+			return getHouseName(i);
+		}
+	}
+	return "";
+	}
+
 
