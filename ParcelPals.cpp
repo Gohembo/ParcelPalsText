@@ -24,6 +24,7 @@ vector<vector<string>> playersEvents{ {"","","","","","","","","",""},{"","","",
 vector<bool> porchBandit;
 vector<bool> extraPackage;
 vector<int> extraRolls;
+vector<string> playerNames;
 
 int chanceSpaces[] = {10,19,28};
 int postOffices[] = { 3, 8, 12, 17, 21, 26, 30, 35 };
@@ -79,6 +80,9 @@ int main()
 	}
 	//cout << out << endl;
 	int playerCount;
+	
+
+	
 	while (true) {
 		playerCount = NULL;
 		cout << "How many players will be playing the game?\n";
@@ -93,6 +97,23 @@ int main()
 				cin.clear();
 				cin.ignore(1, '\n');
 			}
+		}
+		else
+		{
+			cout << "Invalid input, try again.\n";
+			cin.clear();
+			cin.ignore(99, '\n');
+		}
+	}
+	vector<string> names(playerCount, "");
+	playerNames = names;
+	int gettingName = 0;
+	while (gettingName < playerCount) {
+		cout << "Player " << gettingName + 1 << ", enter your nickname:";
+		cin >> names[gettingName];
+		if (cin.good()) {
+			cout << "Alright! Welcome to the game, " << names[gettingName] << "!" <<endl;
+			gettingName++;
 		}
 		else
 		{
@@ -127,7 +148,7 @@ int main()
 		while (true) {
 
 			std::string response;
-			cout << "Player " << playerTurn + 1 << ", what would you like to do?\n";
+			cout << names[playerTurn] << ", what would you like to do?\n";
 			//player can either roll, see deliveries, or use a card(if they have any)
 			cin >> response;
 			if (cin.good()) {
@@ -377,9 +398,9 @@ int main()
 			
 	}
 
-	cout << "The winner is: Player " << winnerNumber+1 << endl;
+	cout << "The winner is: " << names[winnerNumber] << endl;
 	for (int i = 0; i < playerCount; i++) {
-		cout << "Player " << i + 1 << " - $" << playersMoney[i] << endl;
+		cout << names[i] << " - $" << playersMoney[i] << endl;
 	}
 }
 
