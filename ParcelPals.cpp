@@ -9,16 +9,18 @@
 #include <random>
 #include <chrono>
 #include <ctime> 
+#include <algorithm>
+#include <cstdlib>
 using namespace std;
 
 
 
 vector<int> playersMoney;//money of all players
 vector<int> playersSpace;//spaces of all players
-vector<vector<string>> playersDeliveries{ {"Wolfram","Estrada","Harfield","Mackenzie","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
+vector<vector<string>> playersDeliveries{ {"","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
-vector<vector<string>> playersEvents{ {"Car Crash","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
+vector<vector<string>> playersEvents{ {"","","","","","","Teleportation","","",""},{"","Speeding Ticket","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
 vector<bool> porchBandit;
 vector<bool> extraPackage;
 vector<int> extraRolls;
@@ -35,8 +37,10 @@ int playerTurn = 0;//this is the players turn - 1. player1 is 0, player4 is 3
 
 bool allDelivered = false;//true when all packages are delivered
 
-locale loc;
+int deliveryIndex = 0;
 
+locale loc;
+static unsigned int g_seed;//fastrand
 //declare
 bool isHouse(int);
 bool isMansion(int);
@@ -64,6 +68,17 @@ string getFirstDelivery(int player);
 int main()
 {
 	srand(time(NULL));//make it truely random
+	string out;
+	for (string s : residences) {
+		out += s + " ";
+	}
+	cout << out << endl;
+	random_shuffle (begin(residences), end(residences));
+	out ="";
+	for (string s : residences) {
+		out += s + " ";
+	}
+	cout << out << endl;
 	int playerCount;
 	while (true) {
 		playerCount = NULL;
@@ -165,7 +180,7 @@ int main()
 		if (indexofString(playersEvents[playerTurn], "Porch Bandit") != -1) {
 			porchBandit[playerTurn] = true;
 		}
-
+	
 		
 
 
@@ -227,6 +242,29 @@ int main()
 			giveChance(playerTurn, getEventName(randomnum));
 			cout << eventDescription(randomnum);
 		}
+
+		//Teleportation check must be between event card and post office check
+		if (indexofString(playersEvents[playerTurn], "Teleportation") > -1) {
+
+			bool found = false;
+			for (int i = 1; i < 36; i++) {//spaces we will add to the player
+				for (int x : postOffices) {
+					if (x == spaceOn + i) {
+						addSpaceToPlayer(playerTurn, i-1);
+						cout << "You have been teleported to the nearest post office!" << endl;
+						found = true;
+						break;
+					}
+					
+				}
+				if (found) {
+					break;
+				}
+			}
+			removeChance(playerTurn, "Teleportation");
+		}
+
+
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
 			cout << "You have landed on a post office square!\n";
@@ -240,15 +278,22 @@ int main()
 		//TODO: add a check to see what chance cards have to be acted upon the player right now (the non optional ones like losing a package)
 		if (indexofString(playersEvents[playerTurn], "Cargo Plane") > -1) {
 			extraRolls[playerTurn] = 2;
+			removeChance(playerTurn, "Cargo Plane");
+
 		}
 		if (indexofString(playersEvents[playerTurn], "Premium Gas") > -1) {
 			extraRolls[playerTurn] = 1;
+			removeChance(playerTurn, "Premium Gas");
+
 		}
 		if (indexofString(playersEvents[playerTurn], "Speeding") > -1) {
 			extraRolls[playerTurn] = 1;
+			removeChance(playerTurn, "Speeding");
+
 		}
 		if (indexofString(playersEvents[playerTurn], "Speeding Ticket") > -1) {
 			addSpaceToPlayer(playerTurn, -5);
+			removeChance(playerTurn, "Speeding Ticket");
 		}
 		if (indexofString(playersEvents[playerTurn], "Car Crash") > -1) {
 			cout << playerTurn << endl;;
@@ -266,6 +311,8 @@ int main()
 			}
 			
 		}
+		
+
 
 		//next turn
 		cout << endl;
@@ -276,7 +323,30 @@ int main()
 		{
 			playerTurn = 0;
 		}
+		bool allPackagesTaken=true;
+		bool allPlayerPackegesDelivered = true;
+		for (string s : residences) {
+		//	cout << s;
+			if (s.compare("TAKEN") != 0) {
+				allPackagesTaken = false;
+			}
+		}
+		//cout << endl;
+		for (int i = 0; i < playerCount - 1; i++) {
+			for (string s : playersDeliveries[i]) {
+				//cout << s;
+				if (s.compare("") != 0) {
+					allPlayerPackegesDelivered = false;
+				}
+			}
+		}
+		//cout << endl;
+		if (allPackagesTaken && allPlayerPackegesDelivered) {
+			allDelivered = true;
+		}
 	}
+
+	
 
 }
 
@@ -459,37 +529,53 @@ string getApartmentName(int i)
 }
 
 bool givePlayerDelivery(int player, bool goOver) {
-	if (playersDeliveries[player].size() <= 5 || goOver) {//has less than 5 deliveries or they draw the card to get an extra delivery
-		int deliveryRes;
-		do
-		{
-			
-			deliveryRes = RNG(0, residences->size() - 1);//get random index of residencs
-			
-		} while (!residences[deliveryRes].compare("TAKEN"));//a bit of inefficient code, but it gets the job done
+	int size = 0;
+	int propertiesLeft = 0;
+	for (string s : residences) {
+		size++;
+		if (s.compare("") != 0) {
+			propertiesLeft++;
+		}
+	}
+	int playerDeliveryAmount = 0;
+	for (string s : playersDeliveries[player]) {
+		if (s.compare("") != 0) {
+			playerDeliveryAmount++;
+		}
 		
-			string indexOfRes = residences[deliveryRes];
-			int index = 0;
-			
-			for (int i = 0; i < playersDeliveries[player].size(); i++) {//get first index thats not empty
-				
-					if (playersDeliveries[player][i] != "") {
-						index = i;
-						break;
-					}
+	}
+	if ((playerDeliveryAmount <= 5 || goOver) && propertiesLeft > 0) {//has less than 5 deliveries or they draw the card to get an extra delivery
+		string indexOfRes = residences[deliveryIndex];
+		int index = 0;
+
+		for (int i = 0; i < playersDeliveries[player].size(); i++) {//get first index thats not taken
+
+			if (playersDeliveries[player][i] == "") {
+				index = i;
+				break;
 			}
-			playersDeliveries[player][index].append(residences[deliveryRes]);
-			residences[deliveryRes] = "TAKEN";//set to "TAKEN"
-		return true;
+		}
+		playersDeliveries[player][index].append(residences[deliveryIndex]);
+		cout << "You have been assigned to deliver a package to the " << residences[deliveryIndex] << " residence!" << endl;
+		residences[deliveryIndex] = "TAKEN";//set to "TAKEN"
+		deliveryIndex++;
+		
 	}
 	else
 	{
+		cout << "There are no more deliveries for you to take!" << endl;
 		return false;
+
 	}
 }
 
 int RNG(int low, int high) {
 	return rand() % high + low;//return random number
+}
+
+inline int fast_rand(void) {//
+	g_seed = (214013 * g_seed + 2531011);
+	return (g_seed >> 16) & 0x7FFF;
 }
 
 bool hasDelivery(int player, string residence) {
@@ -507,14 +593,14 @@ void addMoney(int player, int amount) {
 
 void removePlayerDelivery(int player, string residence, bool addToPile) {
 	int index = 0;
-	string out;
-	for (string s : playersDeliveries[player]) {//go through all active deliveries a player has
-		if (s.compare(residence) == 0) {//see if they are the same
+	for (int i = 0; i < playersDeliveries[player].size(); i++) {
+		if (playersDeliveries[player][i].compare(residence) == 0) {//see if they are the same
+			index = i;
 			break;//break to remove it from vector
 		}
-		index++;//add to index if first failed
 	}
 	playersDeliveries[player][index] = "";
+
 	if (addToPile) {
 		int index = 0;
 		for (string s : residences) {
