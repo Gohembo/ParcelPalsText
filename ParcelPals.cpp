@@ -20,7 +20,7 @@ vector<int> playersSpace;//spaces of all players
 vector<vector<string>> playersDeliveries{ {"","","","","",""},{"","","","","",""},{"","","","","",""},{"","","","","",""}};//deliveries of all players
 //index 0 of first vector will be player 1. the vector at index 0 will be the strings of the names of the residences
 //that player has to deliver to
-vector<vector<string>> playersEvents{ {"","","","","","","Teleportation","","",""},{"","Speeding Ticket","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
+vector<vector<string>> playersEvents{ {"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""},{"","","","","","","","","",""} };
 vector<bool> porchBandit;
 vector<bool> extraPackage;
 vector<int> extraRolls;
@@ -30,8 +30,7 @@ int postOffices[] = { 3, 8, 12, 17, 21, 26, 30, 35 };
 int mansions[] = { 2, 9, 11, 18, 20,27,29,36 };
 int houses[] = { 4,5,6,7,22,23,24,25 };
 int apartments[] = { 13,14,15,16,31,32,33,34 };
-string residences[] = {"Harfield","Estrada", "Mackenzie", "Wolfram", "Cabera", "Lowery", "Fischer", "Thatcher", "Kelley", "Shapard", 
-"Atkins", "Rodrigues", "Howells", "Barlow"};
+string residences[] = { "Lowery","Howells","Barlow","Fischer","Thatcher","Atkins","Rodrigues","Harfield","Wolfram","Cabera","Mackenzie","Estrada","Shepard","Kelley" };
 
 int playerTurn = 0;//this is the players turn - 1. player1 is 0, player4 is 3
 
@@ -72,13 +71,13 @@ int main()
 	for (string s : residences) {
 		out += s + " ";
 	}
-	cout << out << endl;
+	//cout << out << endl;
 	random_shuffle (begin(residences), end(residences));
 	out ="";
 	for (string s : residences) {
 		out += s + " ";
 	}
-	cout << out << endl;
+	//cout << out << endl;
 	int playerCount;
 	while (true) {
 		playerCount = NULL;
@@ -123,7 +122,7 @@ int main()
 
 	
 	while (!allDelivered) {
-		int timesRolled = extraRolls[playerTurn] + 1;//how many times to roll the dice (plus the one initial roll)
+		int timesRolled = extraRolls[playerTurn] + 1;//how many times to rolrolll the dice (plus the one initial roll)
 
 		while (true) {
 
@@ -199,6 +198,8 @@ int main()
 				{
 					cout << "A porch bandit stole your package!" << endl;
 					removeChance(playerTurn, "Porch Bandit");
+					removePlayerDelivery(playerTurn, getHouseName(spaceOn), false);
+
 				}
 				
 			}
@@ -215,6 +216,8 @@ int main()
 				{
 					cout << "A porch bandit stole your package!" << endl;
 					removeChance(playerTurn, "Porch Bandit");
+					removePlayerDelivery(playerTurn, getMansionName(spaceOn), false);
+
 				}
 				
 			}
@@ -231,6 +234,8 @@ int main()
 				{
 					cout << "A porch bandit stole your package!" << endl;
 					removeChance(playerTurn, "Porch Bandit");
+					removePlayerDelivery(playerTurn, getApartmentName(spaceOn), false);
+
 				}
 				
 			}
@@ -268,7 +273,7 @@ int main()
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
 			cout << "You have landed on a post office square!\n";
-			givePlayerDelivery(playerTurn, false);
+			givePlayerDelivery(playerTurn, extraPackage[playerTurn]);
 			
 		}
 
@@ -296,7 +301,7 @@ int main()
 			removeChance(playerTurn, "Speeding Ticket");
 		}
 		if (indexofString(playersEvents[playerTurn], "Car Crash") > -1) {
-			cout << playerTurn << endl;;
+			//cout << playerTurn << endl;;
 			string res = getFirstDelivery(playerTurn);
 			if (res.compare("") != 0) {
 				removePlayerDelivery(playerTurn, res,true);
@@ -311,8 +316,23 @@ int main()
 			}
 			
 		}
-		
+		if (indexofString(playersEvents[playerTurn], "Pay Raise") > -1) {
+			addMoney(playerTurn, 200);
+			removeChance(playerTurn, "Pay Raise");
 
+		}
+		if (indexofString(playersEvents[playerTurn], "Flat Tire") > -1) {
+			addMoney(playerTurn, -200);
+			removeChance(playerTurn, "Flat Tire");
+
+		}
+		if(indexofString(playersEvents[playerTurn], "Bigger Satchel") > -1) {
+			extraPackage[playerTurn] = true;
+			removeChance(playerTurn, "Bigger Satchel");
+
+		}
+		
+		
 
 		//next turn
 		cout << endl;
@@ -326,28 +346,41 @@ int main()
 		bool allPackagesTaken=true;
 		bool allPlayerPackegesDelivered = true;
 		for (string s : residences) {
-		//	cout << s;
+
 			if (s.compare("TAKEN") != 0) {
 				allPackagesTaken = false;
 			}
 		}
-		//cout << endl;
+
 		for (int i = 0; i < playerCount - 1; i++) {
 			for (string s : playersDeliveries[i]) {
-				//cout << s;
+
 				if (s.compare("") != 0) {
 					allPlayerPackegesDelivered = false;
 				}
 			}
 		}
-		//cout << endl;
+
 		if (allPackagesTaken && allPlayerPackegesDelivered) {
 			allDelivered = true;
 		}
 	}
 
-	
+	cout << "The game is now done." << endl;
+	int winnerNumber = 0;
+	int max = -99999;
+	for (int i = 0; i < playerCount; i++) {
+		if (playersMoney[i] > max) {
+			winnerNumber = i;
+			max = playersMoney[i];
+		}
+			
+	}
 
+	cout << "The winner is: Player " << winnerNumber+1 << endl;
+	for (int i = 0; i < playerCount; i++) {
+		cout << "Player " << i + 1 << " - $" << playersMoney[i] << endl;
+	}
 }
 
 bool isHouse(int i) {//check if the square is a house or not
@@ -520,7 +553,7 @@ string getApartmentName(int i)
 		return "Lowery";
 	}
 	else if (i == 31 || i == 32 || i == 33 || i == 34) {
-		return "Howell";
+		return "Howells";
 	}
 	else
 	{
@@ -531,6 +564,8 @@ string getApartmentName(int i)
 bool givePlayerDelivery(int player, bool goOver) {
 	int size = 0;
 	int propertiesLeft = 0;
+	int retries = 0;
+	bool hadToQuit = false;;
 	for (string s : residences) {
 		size++;
 		if (s.compare("") != 0) {
@@ -545,20 +580,58 @@ bool givePlayerDelivery(int player, bool goOver) {
 		
 	}
 	if ((playerDeliveryAmount <= 5 || goOver) && propertiesLeft > 0) {//has less than 5 deliveries or they draw the card to get an extra delivery
-		string indexOfRes = residences[deliveryIndex];
-		int index = 0;
+		
+		while (residences[deliveryIndex].compare("TAKEN") == 0) {
+			if (retries > size) {
+				hadToQuit = true;
+				break;
+			}
+			if (deliveryIndex + 1 < size) {
+				deliveryIndex++;
 
-		for (int i = 0; i < playersDeliveries[player].size(); i++) {//get first index thats not taken
-
-			if (playersDeliveries[player][i] == "") {
-				index = i;
+			}
+			else
+			{
+				deliveryIndex = 0;
+			}
+			
+			retries++;
+			if (residences[deliveryIndex].compare("| E") == 0) {//weird ass error means we have no more deliveries
+				hadToQuit = true;
 				break;
 			}
 		}
-		playersDeliveries[player][index].append(residences[deliveryIndex]);
-		cout << "You have been assigned to deliver a package to the " << residences[deliveryIndex] << " residence!" << endl;
-		residences[deliveryIndex] = "TAKEN";//set to "TAKEN"
-		deliveryIndex++;
+		if (!hadToQuit) {
+			int index = 0;
+
+			for (int i = 0; i < playersDeliveries[player].size(); i++) {//get first index thats not taken
+
+				if (playersDeliveries[player][i] == "") {
+					index = i;
+					break;
+				}
+			}
+			string indexOfRes = residences[deliveryIndex];
+			playersDeliveries[player][index].append(residences[deliveryIndex]);
+			cout << "You have been assigned to deliver a package to the " << residences[deliveryIndex] << " residence!" << endl;
+			residences[deliveryIndex] = "TAKEN";//set to "TAKEN"
+			if (deliveryIndex + 1 < size) {
+				deliveryIndex++;
+
+			}
+			else
+			{
+				deliveryIndex = 0;
+			}
+			if (goOver) {
+				extraPackage[playerTurn] = false;
+			}
+		}
+		else
+		{
+			cout << "There are no more deliveries for you to take!" << endl;
+			return false;
+		}
 		
 	}
 	else
@@ -588,19 +661,36 @@ bool hasDelivery(int player, string residence) {
 }
 
 void addMoney(int player, int amount) {
-	playersMoney[player] += amount;
+	if (amount >= 0) {
+		playersMoney[player] += amount;
+
+	}
+	else
+	{
+		playersMoney[player] -= amount;
+
+	}
 }
 
 void removePlayerDelivery(int player, string residence, bool addToPile) {
 	int index = 0;
-	for (int i = 0; i < playersDeliveries[player].size(); i++) {
-		if (playersDeliveries[player][i].compare(residence) == 0) {//see if they are the same
-			index = i;
-			break;//break to remove it from vector
+	for (string s : playersDeliveries[player]) {
+		if (s.compare(residence) == 0) {
+			playersDeliveries[player][index] = "";
+			break;
+		}
+		index++;
+	}
+
+	for (int i = 0; i < size(playersDeliveries[player]); i++) {
+		if (playersDeliveries[player][i].compare(residence) == 0) {
+			playersDeliveries[player][i] = "";
+			break;
 		}
 	}
-	playersDeliveries[player][index] = "";
-
+	if (playersDeliveries[player][index].compare(residence) == 0) {
+		playersDeliveries[player][index] = "";
+	}
 	if (addToPile) {
 		int index = 0;
 		for (string s : residences) {
@@ -612,6 +702,7 @@ void removePlayerDelivery(int player, string residence, bool addToPile) {
 		residences[index] = residence;
 		
 	}
+	
 }
 
 void giveChance(int player, string card) {
