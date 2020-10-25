@@ -150,6 +150,7 @@ int main()
 
 			std::string response;
 			cout << names[playerTurn] << ", what would you like to do?\n";
+			cout << "Enter \"roll\" to roll, and \"stats\" to see your stats." << endl;
 			//player can either roll, see deliveries, or use a card(if they have any)
 			cin >> response;
 			if (cin.good()) {
