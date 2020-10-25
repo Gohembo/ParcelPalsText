@@ -157,7 +157,22 @@ int main()
 				if (response.find("roll") != string::npos) {//if response contains the word "roll"
 					break;
 				}//more to be added (as an else)! XX
-				
+				else if (response.find("stats") != string::npos) {
+					cout << "You currently have $" << playersMoney[playerTurn] << " dollars" << "\n";
+					cout << "You currently have the following packages to deliver: ";
+					bool nodeliveries = true;
+					for (int i = 0; i < playersDeliveries[playerTurn].size(); ++i) {
+						//cout << playersDeliveries[playerTurn][i].compare("");
+						if (playersDeliveries[playerTurn][i].compare("") != 0) {
+							nodeliveries = false;
+							cout << playersDeliveries[playerTurn][i] << " ";
+						}
+					}
+					if (nodeliveries == true) {
+						cout << "none";
+					}
+					cout << "\n";
+				}
 			}
 			else
 			{

@@ -1,8 +1,9 @@
 ﻿  ParcelPals.cpp
 X:\programs\programs\ParcelPalsText\ParcelPals.cpp(71,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(704,22): warning C4018: '<': signed/unsigned mismatch
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(782,20): warning C4018: '<': signed/unsigned mismatch
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(603): warning C4715: 'getEventName': not all control paths return a value
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(645): warning C4715: 'eventDescription': not all control paths return a value
-X:\programs\programs\ParcelPalsText\ParcelPals.cpp(740): warning C4715: 'givePlayerDelivery': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(164,24): warning C4018: '<': signed/unsigned mismatch
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(719,22): warning C4018: '<': signed/unsigned mismatch
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(797,20): warning C4018: '<': signed/unsigned mismatch
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(618): warning C4715: 'getEventName': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(660): warning C4715: 'eventDescription': not all control paths return a value
+X:\programs\programs\ParcelPalsText\ParcelPals.cpp(755): warning C4715: 'givePlayerDelivery': not all control paths return a value
   ParcelPals.vcxproj -> X:\programs\programs\ParcelPalsText\Debug\ParcelPals.exe
