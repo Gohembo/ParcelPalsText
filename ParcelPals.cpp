@@ -67,6 +67,7 @@ string getFirstDelivery(int player);
 
 int main()
 {
+	cout << "Welcome to Parcel Pals!" << endl;
 	srand(time(NULL));//make it truely random
 	string out;
 	for (string s : residences) {
@@ -209,7 +210,22 @@ int main()
 		//check for space player is on
 		if (isHouse(spaceOn)) {
 			cout << "You have landed on the " + getHouseName(spaceOn) << " residence!\n";
+			cout << "  *      _____" << endl;
+			cout << "   **   /_____\\ " << endl;
+			cout << "  _**_ /_______\\ " << endl;
+			cout << "  |  |/_________\\ " << endl;
+			cout << "  | /____________\\ " << endl;
+			cout << "  |/______________\\ " << endl;
+			cout << "  /________________\\ " << endl;
+			cout << " [______=====_______]" << endl;
+			cout << " [______[   ]_______]" << endl;
+			cout << " [______[   ]_______]" << endl;
+			cout << " [______[  *]_______]" << endl;
+			cout << " [______[   ]_______]" << endl;
+			cout << endl;
 			if (hasDelivery(playerTurn, getHouseName(spaceOn))) {//if has a package for residence
+				
+
 				if (!porchBandit[playerTurn]) {
 					addMoney(playerTurn, 500);
 					cout << "You delivered your package to the " + getHouseName(spaceOn) << " residence and earned $500! \n";
@@ -227,6 +243,26 @@ int main()
 		}
 		if (isMansion(spaceOn)) {
 			cout << "You have landed on the " + getMansionName(spaceOn) << " residence!\n";
+			cout << "      ^		" << endl;
+			cout << "     /3\\		" << endl;
+			cout << "    /333\\		" << endl;
+			cout << "   /33333\\		" << endl;
+			cout << "  /3333333\\	" << endl;
+			cout << " /333333333\\_______	 ^" << endl;
+			cout << "[_________________|     /3\\		" << endl;
+			cout << "[__|     |     |__|    /333\\		" << endl;
+			cout << "[__|-----|-----|__|   /33333\\		" << endl;
+			cout << "[__|_____|_____|__|  /3333333\\	" << endl;
+			cout << "[_________________| /333333333\\	" << endl;
+			cout << "[__________________/33333333333\\_________ " << endl;
+			cout << "[_______________________________________]" << endl;
+			cout << "[_______===========_____|     |     |___]" << endl;
+			cout << "[_______[    |    ]_____|-----|-----|___]" << endl;
+			cout << "[_______[    |    ]_____|_____|_____|___]" << endl;
+			cout << "[_______[   *|*   ]_____________________]" << endl;
+			cout << "[_______[    |    ]_____________________]" << endl;
+			cout << endl;
+
 			if (hasDelivery(playerTurn, getMansionName(spaceOn))) {
 				if (!porchBandit[playerTurn]) {
 					addMoney(playerTurn, 1000);
@@ -245,6 +281,23 @@ int main()
 		}
 		if (isApartment(spaceOn)) {
 			cout << "You have landed on the " + getApartmentName(spaceOn) << " residence!\n";
+			cout << "========================" << endl;
+			cout << "|______________________|" << endl;
+			cout << "|____|   |____|   |____|" << endl;
+			cout << "|____|___|____|___|____|" << endl;
+			cout << "|______________________|" << endl;
+			cout << "|____|   |____|   |____|" << endl;
+			cout << "|____|___|____|___|____|" << endl;
+			cout << "|______________________|" << endl;
+			cout << "|____|   |____|   |____|" << endl;
+			cout << "|____|___|____|___|____|" << endl;
+			cout << "|______________________|" << endl;
+			cout << "|_________=====________|" << endl;
+			cout << "|_________|   |________|" << endl;
+			cout << "|_________|  *|________|" << endl;
+			cout << "|_________|   |________|" << endl;
+			cout << endl;
+
 			if (hasDelivery(playerTurn, getApartmentName(spaceOn))) {
 				if (!porchBandit[playerTurn]) {
 					addMoney(playerTurn, 250);
@@ -265,6 +318,19 @@ int main()
 		//check if player is on chance space
 		if (find(begin(chanceSpaces),end(chanceSpaces),spaceOn) != end(chanceSpaces)) {
 			cout << "You have landed on a chance square! You drew a card: " << getEventName(randomnum) << "\n"; //changed
+			cout << "====================" << endl;
+			cout << "|.....========.....|" << endl;
+			cout << "|....||......||....|" << endl;
+			cout << "|....||......||....|" << endl;
+			cout << "|............||....|" << endl;
+			cout << "|.....=======||....|" << endl;
+			cout << "|.....||...........|" << endl;
+			cout << "|.....||...........|" << endl;
+			cout << "|.....||...........|" << endl;
+			cout << "|.....__...........|" << endl;
+			cout << "|....|_|...........|" << endl;
+			cout << "====================" << endl;
+			cout << endl;
 			giveChance(playerTurn, getEventName(randomnum));
 			cout << eventDescription(randomnum);
 		}
@@ -294,6 +360,16 @@ int main()
 		//check if player is on post office
 		if (find(begin(postOffices), end(postOffices), spaceOn) != end(postOffices)) {
 			cout << "You have landed on a post office square!\n";
+			cout << "=======================" << endl;
+			cout << "|_|_____|_____|_____|_|" << endl;
+			cout << "|____[POST OFFICE]____|" << endl;
+			cout << "|_|_____|_____|_____|_|" << endl;
+			cout << "|____|___=====___|____|" << endl;
+			cout << "|_|______|   |______|_|" << endl;
+			cout << "|____|___|  *|___|____|" << endl;
+			cout << "|_|______|   |______|_|" << endl;
+			cout << endl;
+
 			givePlayerDelivery(playerTurn, extraPackage[playerTurn]);
 			
 		}
